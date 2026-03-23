@@ -3,453 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposta Comercial: Unidade de Automação e IA (UAIA)</title>
+    <title>Dashboard Executivo: Libre IA</title>
     <style>
+        :root {
+            --primary-dark: #064e3b;   /* Forest Green */
+            --primary: #047857;        /* Emerald Dark */
+            --secondary: #10b981;      /* Emerald Light */
+            --accent: #d1fae5;         /* Mint */
+            --bg-color: #f3f4f6;       /* Light Gray background */
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            color: #1f2937; /* Dark gray for readability */
-            background-color: #f9fafb; /* Very light gray/white background */
-            min-height: 100vh;
-            padding: 15px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1200px;
+        /* Dashboard Grid Layout */
+        .dashboard {
+            max-width: 1400px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(4, 120, 87, 0.08);
-            overflow: hidden;
-            border: 1px solid #e5e7eb;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(12, 1fr);
         }
 
-        header {
-            background: linear-gradient(135deg, #047857 0%, #10b981 100%); /* Forest to Emerald Green */
+        /* Header Component */
+        .header {
+            grid-column: span 12;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             color: white;
-            padding: 50px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding: 30px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(4, 120, 87, 0.2);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.4;
-        }
-
-        header h1 {
-            font-size: 2.8em;
-            margin-bottom: 15px;
+        .header-titles h1 {
+            font-size: 2.2em;
             font-weight: 800;
-            position: relative;
-            z-index: 1;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.95;
-            font-weight: 400;
-            position: relative;
-            z-index: 1;
+        .header-titles p {
+            color: var(--accent);
+            font-size: 1.1em;
+            font-weight: 500;
         }
 
-        .content {
-            padding: 40px 30px;
+        .header-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            backdrop-filter: blur(5px);
         }
 
-        h2 {
-            color: #064e3b; /* Very dark green */
+        /* Top KPI Row */
+        .kpi-row {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .kpi-card .kpi-title {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .kpi-card .kpi-value {
+            color: var(--primary-dark);
             font-size: 2em;
-            margin: 40px 0 25px 0;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #10b981;
-            font-weight: 700;
+            font-weight: 800;
         }
 
-        h2:first-of-type {
-            margin-top: 0;
+        .kpi-card .kpi-desc {
+            font-size: 0.85em;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-top: 5px;
         }
 
-        /* Responsive Grid for Slide Containers */
-        .slide-container {
-            background: #ffffff;
+        /* Generic Card Style */
+        .card {
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-left: 6px solid #10b981; /* Green accent */
-            border-top: 1px solid #f3f4f6;
-            border-right: 1px solid #f3f4f6;
-            border-bottom: 1px solid #f3f4f6;
-            transition: transform 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
         }
 
-        .slide-container:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(4, 120, 87, 0.1);
-        }
-
-        .slide-title {
-            font-size: 1.5em;
+        .card-title {
+            color: var(--primary-dark);
+            font-size: 1.3em;
             font-weight: 700;
-            color: #065f46;
             margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
-        .slide-number {
-            background: #059669;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9em;
-            font-weight: 700;
-            flex-shrink: 0;
+        /* Specific Span Layouts */
+        .col-span-8 { grid-column: span 8; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-12 { grid-column: span 12; }
+
+        /* Highlight Boxes */
+        .insight-box {
+            background: var(--accent);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 1.05em;
+            border-left: 4px solid var(--primary);
+            margin-top: auto;
         }
 
-        .visual-desc {
-            background: #f0fdf4; /* Very light green */
+        .alert-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
             padding: 15px;
             border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #34d399;
-            color: #1f2937;
-            font-size: 0.95em;
-        }
-
-        .visual-desc strong {
-            color: #047857;
-        }
-
-        .speech-notes {
-            background: #f8fafc;
-            padding: 18px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-style: italic;
-            color: #475569;
-            border-left: 4px solid #94a3b8;
-            font-size: 0.95em;
-        }
-
-        .speech-notes strong {
-            color: #334155;
-            font-style: normal;
-            display: block;
-            margin-bottom: 5px;
-            font-size: 1.05em;
-        }
-
-        /* Tech Section & Cards */
-        .tech-section {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 0;
-            margin-top: 30px;
-        }
-
-        .tech-item {
-            background: #f0fdf4;
-            padding: 20px;
-            border-radius: 10px;
             margin-bottom: 15px;
-            border-left: 5px solid #059669;
+            color: #991b1b;
         }
 
-        .tech-item strong {
-            color: #064e3b;
-            font-size: 1.15em;
-            display: block;
-            margin-bottom: 8px;
+        /* Lists */
+        ul {
+            list-style: none;
         }
 
-        .tech-item ul {
+        ul li {
+            position: relative;
             padding-left: 20px;
-            margin-top: 10px;
+            margin-bottom: 10px;
+            color: var(--text-main);
         }
 
-        .tech-item li {
-            margin-bottom: 8px;
-            color: #374151;
-            font-size: 0.95em;
+        ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
         }
 
-        .opportunity-grid, .metrics {
+        /* Architecture Section */
+        .tech-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
 
-        .opportunity-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        .tech-item {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid var(--primary);
         }
 
-        .opportunity-card h4 {
-            color: #047857;
+        .tech-item h4 {
+            color: var(--primary-dark);
             margin-bottom: 8px;
-            font-size: 1.1em;
+            font-size: 1em;
         }
 
-        .opportunity-card p {
-            color: #4b5563;
-            font-size: 0.9em;
+        .tech-item p {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        /* CTA Roadmap */
+        .roadmap-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            background: var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--secondary);
+        }
+
+        .step h4 {
+            color: var(--primary-dark);
+            font-size: 1.2em;
             margin-bottom: 10px;
         }
 
-        .highlight {
-            background: #d1fae5;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            color: #065f46;
-            display: inline-block;
-            font-size: 0.85em;
-        }
-
-        .metric-box {
-            background: #f0fdf4;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #d1fae5;
-        }
-
-        .metric-box .value {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #047857;
-            display: block;
-        }
-
-        .metric-box .label {
-            font-size: 0.85em;
-            color: #064e3b;
-            margin-top: 5px;
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            color: white;
-            padding: 40px 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 40px;
-            box-shadow: 0 10px 25px rgba(4, 120, 87, 0.2);
-        }
-
-        .cta-section h3 {
-            color: white;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-
         /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .col-span-8, .col-span-4, .col-span-6 {
+                grid-column: span 12;
+            }
+        }
+
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            header {
-                padding: 40px 20px;
-            }
-            header h1 {
-                font-size: 2.2em;
-            }
-            header .subtitle {
-                font-size: 1em;
-            }
-            .content {
-                padding: 25px 15px;
-            }
-            h2 {
-                font-size: 1.6em;
-            }
-            .slide-title {
-                font-size: 1.3em;
-            }
-            .slide-container {
-                padding: 20px 15px;
-            }
-            .opportunity-grid, .metrics {
-                grid-template-columns: 1fr; /* Stacks cards vertically on small screens */
-            }
-            .tech-item {
-                padding: 15px;
-            }
+            body { padding: 10px; }
+            .header-titles h1 { font-size: 1.8em; }
+            .card { padding: 20px; }
+            .kpi-card { padding: 15px; }
+            .insight-box { font-size: 0.95em; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>🚀 UAIA</h1>
-            <p class="subtitle">Unidade de Automação e Inteligência Artificial</p>
-            <p class="subtitle" style="margin-top: 8px; font-weight: 600;">A Nova Era da Automação em GovTech</p>
-        </header>
-
-        <div class="content">
-            
-            <h2>📊 Roteiro de Apresentação Executiva</h2>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">1</span>
-                    Capa e Visão de Futuro
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Título forte sobre a evolução da empresa. Timeline mostrando a jornada da Libre Soluções: de sistemas tradicionais até agentes inteligentes (UAIA).
-                </div>
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "Nós já construímos uma base sólida fornecendo sistemas para o governo. O próximo passo lógico não é apenas entregar o software, mas entregar a força de trabalho digital que opera esse software. A UAIA representa nossa evolução de fornecedores de tecnologia para parceiros estratégicos em transformação digital."
-                </div>
+    <div class="dashboard">
+        
+        <div class="header">
+            <div class="header-titles">
+                <h1>🚀 Libre IA</h1>
+                <p>Unidade Estratégica de Automação e Inteligência Artificial</p>
             </div>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">2</span>
-                    O Problema (A Dor do Cliente)
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Infográfico destacando: Sobrecarga de Servidores Públicos, Sistemas Ilhados e Pressão por Eficiência com Orçamento Limitado.
-                </div>
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "Nossos clientes perdem milhares de horas em tarefas burocráticas. Eles precisam de eficiência em escala sem inflar a folha de pagamento. A demanda aumentou, mas os recursos são os mesmos. A solução não pode ser apenas contratar mais pessoas."
-                </div>
+            <div class="header-badge">
+                Status: Proposta Executiva
             </div>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">🎯</span>
-                    O Oceano Azul GovTech
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Gráfico de quadrantes mostrando a Libre isolada no quadrante de "Alta Segurança/Governança" + "Automação com Agentes", longe de startups sem compliance e sistemas legados sem automação.
-                </div>
-                
-                <div class="opportunity-grid">
-                    <div class="opportunity-card">
-                        <h4>🛡️ A Barreira de Entrada</h4>
-                        <p>Startups genéricas não possuem licitações, nem compliance de LGPD público. Nós já temos a confiança e os contratos ativos.</p>
-                        <span class="highlight">Fosso Competitivo</span>
-                    </div>
-                    <div class="opportunity-card">
-                        <h4>📈 Benchmarks</h4>
-                        <p>A <strong>Palantir</strong> validou a IA segura no GovTech global. A <strong>NeuralMind</strong> validou a dor de leitura de Diários Oficiais no Brasil.</p>
-                        <span class="highlight">Mercado Validado</span>
-                    </div>
-                    <div class="opportunity-card">
-                        <h4>🔗 Automação Não-Invasiva</h4>
-                        <p>O cliente não troca de sistema. Nossos agentes operam o software atual via banco de dados e APIs, modernizando sem traumas.</p>
-                        <span class="highlight">Adoção Imediata</span>
-                    </div>
-                </div>
-
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "O nosso Custo de Aquisição (CAC) é praticamente zero. Faremos um 'upsell' na nossa base atual. Vendemos automação auditável com a segurança que só o nosso background de Qualidade (QA) garante."
-                </div>
-            </div>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">3</span>
-                    A Solução (AIaaS)
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Diagrama arquitetural mostrando Agentes de IA conectados aos nossos sistemas, validando documentos e preenchendo formulários sozinhos.
-                </div>
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "Não são chatbots de perguntas e respostas. São Agentes Autônomos que tomam ações reais nos processos públicos. O governo passa a pagar pelo trabalho executado e resolvido, não apenas pela manutenção da infraestrutura."
-                </div>
-            </div>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">4</span>
-                    Nossos Cases Iniciais
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Destaque para o **Libretto** (Agente interno de automação Git/QA) e a **MarIA** (Assistente Virtual).
-                </div>
-                
-                <div class="metrics">
-                    <div class="metric-box">
-                        <span class="value">100%</span>
-                        <span class="label">Notificações Git automatizadas (Libretto)</span>
-                    </div>
-                    <div class="metric-box">
-                        <span class="value">5.000+</span>
-                        <span class="label">Interações/mês de cidadãos (MarIA)</span>
-                    </div>
-                </div>
-
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "Já provamos que sabemos fazer. O Libretto otimizou nosso time técnico e a MarIA atende cidadãos. Transformar isso em uma Unidade (UAIA) é o que vai dar governança para empacotar e vender essas soluções em escala para dezenas de prefeituras."
-                </div>
-            </div>
-
-            <div class="slide-container">
-                <h3 class="slide-title">
-                    <span class="slide-number">5</span>
-                    Roadmap de Implementação (90 Dias)
-                </h3>
-                <div class="visual-desc">
-                    <strong>Visual:</strong> Linha do tempo: Mês 1 (Aprovação e Stack Segura) -> Mês 2 (Piloto Interno e Integrações) -> Mês 3 (Métricas de ROI e Oferta B2G).
-                </div>
-                <div class="speech-notes">
-                    <strong>Argumento de Venda:</strong> "É uma estratégia de baixo risco. Começamos dentro de casa conectando o n8n aos nossos processos de trabalho. Validamos a estabilidade, mapeamos a redução de custos e usamos isso como vitrine para o nosso primeiro cliente externo."
-                </div>
-            </div>
-
-            <h2>🔧 Arquitetura Técnica: Piloto Interno</h2>
-            
-            <div class="tech-section">
-                <div class="tech-item">
-                    <strong>1. Orquestração Segura (n8n Self-Hosted)</strong>
-                    <p>Hospedado na nossa própria infraestrutura para garantir que dados sensíveis não trafeguem em nuvens de terceiros. Interface visual rápida e escalável.</p>
-                </div>
-                
-                <div class="tech-item">
-                    <strong>2. Fatos e Contexto (Integração Direta)</strong>
-                    <p>O agente será conectado via API e webhooks ao GitLab e Bancos Relacionais (MySQL/PostgreSQL) para atuar em cima de dados reais, zerando a dependência de conhecimento genérico.</p>
-                </div>
-
-                <div class="tech-item">
-                    <strong>3. Qualidade e Prevenção de Alucinação (O Fator QA)</strong>
-                    <p>Aplicação do nosso conhecimento core: scripts Cypress para validar as saídas geradas pela IA e garantir conformidade contínua antes que qualquer dado chegue ao cliente ou cidadão.</p>
-                </div>
-            </div>
-
-            <div class="cta-section">
-                <h3>🎯 Próximo Passo: O Piloto de 90 Dias</h3>
-                <p style="font-size: 1.1em; opacity: 0.9;">
-                    Aprovação para estruturarmos o primeiro fluxo interno completo.<br>
-                    <strong>Investimento focado e retorno validado na prática.</strong>
-                </p>
-            </div>
-
         </div>
+
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <span class="kpi-title">Custo de Aquisição (CAC)</span>
+                <span class="kpi-value">R$ 0,00</span>
+                <span class="kpi-desc">Upsell na base atual de prefeituras</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">Mercado GovTech IA</span>
+                <span class="kpi-value">+42% a.a.</span>
+                <span class="kpi-desc">Crescimento projetado até 2028</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">Economia Operacional</span>
+                <span class="kpi-value">Até 60%</span>
+                <span class="kpi-desc">Para o cliente governamental</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">Piloto Interno</span>
+                <span class="kpi-value">90 Dias</span>
+                <span class="kpi-desc">Para gerar ROI e validar modelo</span>
+            </div>
+        </div>
+
+        <div class="card col-span-8">
+            <h2 class="card-title">👁️ Visão de Futuro e Posicionamento Estratégico</h2>
+            <p style="font-size: 1.1em; margin-bottom: 20px; color: var(--text-main);">
+                A inteligência artificial não é mais uma "tendência" distante, é a nova infraestrutura base. Entregar apenas o painel de software para o governo será insuficiente; precisamos entregar a <strong>força de trabalho digital</strong> que opera esse sistema.
+            </p>
+            
+            <div class="insight-box" style="margin-bottom: 20px;">
+                "O futuro é hoje e não podemos mais esperar. Precisamos estar à frente e ser pioneiros quando nossos concorrentes chegarem. Quem dominar a camada de automação nos governos hoje, ditará as regras da próxima década."
+            </div>
+
+            <h4 style="color: var(--primary-dark); margin-bottom: 10px;">Ganchos de Venda (Por que fecharão conosco?):</h4>
+            <ul>
+                <li><strong>Lock-in Tecnológico:</strong> Ao conectarmos a Libre IA aos nossos sistemas, criamos uma dependência positiva. O cliente não vai querer trocar um sistema que já trabalha sozinho.</li>
+                <li><strong>Automação Não-Invasiva:</strong> Não pedimos para o governo licitar ou trocar o banco de dados. Nossos agentes rodam nos bastidores, sem traumas operacionais.</li>
+                <li><strong>Aumento de MRR (Receita Recorrente):</strong> Deixamos de vender apenas manutenção para vender "capacidade de processamento". Cobramos pelo resultado, aumentando a margem de lucro.</li>
+            </ul>
+        </div>
+
+        <div class="card col-span-4">
+            <h2 class="card-title">🎯 O Oceano Azul GovTech</h2>
+            
+            <div class="alert-box">
+                <strong>A Dor Real:</strong><br>
+                Servidores sobrecarregados, processos travados e limite orçamentário para novas contratações públicas.
+            </div>
+
+            <p style="margin-bottom: 15px; font-weight: 600;">Por que não temos concorrentes diretos ainda?</p>
+            <ul>
+                <li>Startups ágeis (AAA) não possuem certificações, histórico de licitações ou compliance LGPD público.</li>
+                <li>Empresas tradicionais de GovTech são lentas e focadas em software legado, não em Agentes Autônomos.</li>
+            </ul>
+
+            <div class="insight-box" style="background: var(--bg-color); border-left-color: var(--primary-dark); font-size: 0.9em;">
+                <strong>Nosso Diferencial:</strong> A Libre já tem a confiança, os contratos e a <em>Esteira de Qualidade (QA)</em> para garantir que a IA não sofra "alucinações" com dados públicos.
+            </div>
+        </div>
+
+        <div class="card col-span-6">
+            <h2 class="card-title">🏆 Nossos Ativos (Cases Internos)</h2>
+            <p style="margin-bottom: 15px;">Já começamos a provar a tecnologia dentro de casa. Precisamos apenas de governança para escalar.</p>
+            
+            <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h4 style="color: var(--primary-dark);">🤖 Libretto (Agente de Automação)</h4>
+                <p style="font-size: 0.9em; margin-top: 5px;"><strong>Status: 100% Funcional.</strong> Lê código, monitora GitLab e automatiza o report da equipe técnica. Reduziu drasticamente falhas de comunicação e horas manuais do time de QA/Dev.</p>
+            </div>
+
+            <div style="background: var(--bg-color); padding: 15px; border-radius: 8px;">
+                <h4 style="color: var(--primary-dark);">👩‍💼 MarIA (Assistente Virtual)</h4>
+                <p style="font-size: 0.9em; margin-top: 5px;"><strong>Status: Operando (+5.000 int/mês).</strong> Atende o cidadão diretamente. Com a criação da Libre IA, será refatorada para ser não apenas reativa, mas resolutiva.</p>
+            </div>
+        </div>
+
+        <div class="card col-span-6">
+            <h2 class="card-title">⚙️ Motor Tecnológico (Seguro & Auditável)</h2>
+            <p style="margin-bottom: 15px;">Foco em dados reais, governança e ferramentas open-source consolidadas para evitar custos altos de servidores externos.</p>
+            
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Orquestração</h4>
+                    <p><strong>n8n Self-Hosted:</strong> Garante que os fluxos de dados fiquem 100% dentro dos servidores da empresa (Soberania de Dados).</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Contexto Restrito</h4>
+                    <p>Conexão via API direta com Bancos Relacionais (MySQL/SQL). A IA não inventa, ela lê os fatos.</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Qualidade (QA)</h4>
+                    <p>Automações via Cypress/Selenium para testar as saídas da IA continuamente. O diferencial competitivo de compliance.</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Cérebro (LLM)</h4>
+                    <p>APIs Enterprise (zero-retenção) ou modelos Llama locais, orquestrados em Python/JS.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-span-12" style="border-top: 5px solid var(--primary);">
+            <h2 class="card-title" style="border: none;">🛣️ Próximos Passos e Solicitacão de Aprovação</h2>
+            <p>Proposta para um Piloto Interno focado em resultados rápidos e risco baixo, antes da primeira venda externa.</p>
+            
+            <div class="roadmap-timeline">
+                <div class="step">
+                    <h4>Mês 1</h4>
+                    <p style="font-size: 0.9em; color: var(--text-muted);">Aprovação da diretoria, definição de stack e desenho do primeiro fluxo Libretto 2.0.</p>
+                </div>
+                <div class="step">
+                    <h4>Mês 2</h4>
+                    <p style="font-size: 0.9em; color: var(--text-muted);">Implementação no nosso ecossistema interno. Conexão do n8n aos bancos de dados internos.</p>
+                </div>
+                <div class="step">
+                    <h4>Mês 3</h4>
+                    <p style="font-size: 0.9em; color: var(--text-muted);">Extração de métricas (Economia de horas/Custo). Montagem do "Pacote de Venda" B2G.</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>
