@@ -1,394 +1,521 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Executivo: Libre IA</title>
-    <style>
-        :root {
-            --primary-dark: #064e3b;   /* Forest Green */
-            --primary: #047857;        /* Emerald Dark */
-            --secondary: #10b981;      /* Emerald Light */
-            --accent: #d1fae5;         /* Mint */
-            --bg-color: #f3f4f6;       /* Light Gray background */
-            --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #4b5563;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NodStoK — Controle de estoque com inteligência</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#1D9E75;
+  --green-light:#E1F5EE;
+  --green-mid:#5DCAA5;
+  --green-dark:#085041;
+  --amber:#EF9F27;
+  --red:#E24B4A;
+  --off-white:#F7F6F2;
+  --ink:#0F1A15;
+  --ink-mid:#3B4F46;
+  --ink-muted:#7A8C84;
+  --border:#D8E8E1;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--ink);overflow-x:hidden;}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:64px;background:rgba(247,246,242,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--ink);letter-spacing:-.02em;}
+.logo span{color:var(--green);}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:14px;color:var(--ink-mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--green);}
+.nav-cta{background:var(--ink);color:white;padding:10px 22px;border-radius:100px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s;}
+.nav-cta:hover{background:var(--green);}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 20px;
-            line-height: 1.6;
-        }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 5% 80px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;pointer-events:none;}
+.hero-circle{position:absolute;border-radius:50%;opacity:.07;}
+.hero-c1{width:600px;height:600px;background:var(--green);top:-200px;right:-100px;}
+.hero-c2{width:300px;height:300px;background:var(--amber);bottom:0;left:10%;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.4;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green-dark);padding:6px 14px;border-radius:100px;font-size:13px;font-weight:500;margin-bottom:28px;}
+.hero-tag::before{content:'';width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(42px,7vw,88px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);max-width:800px;margin-bottom:24px;}
+h1 em{font-style:italic;color:var(--green);}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--ink-mid);max-width:520px;line-height:1.7;margin-bottom:40px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-primary{background:var(--green);color:white;padding:16px 32px;border-radius:100px;font-size:15px;font-weight:500;text-decoration:none;transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
+.btn-primary:hover{background:var(--green-dark);transform:translateY(-2px);}
+.btn-secondary{background:transparent;color:var(--ink);padding:16px 32px;border-radius:100px;font-size:15px;text-decoration:none;border:1.5px solid var(--border);transition:all .25s;}
+.btn-secondary:hover{border-color:var(--ink);background:white;}
+.hero-stats{display:flex;gap:40px;margin-top:64px;padding-top:40px;border-top:1px solid var(--border);}
+.stat-item{}
+.stat-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--ink);}
+.stat-label{font-size:13px;color:var(--ink-muted);margin-top:2px;}
 
-        /* Dashboard Grid Layout */
-        .dashboard {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(12, 1fr);
-        }
+/* PROBLEM */
+.section{padding:100px 5%;}
+.section-tag{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:16px;}
+h2{font-family:'Instrument Serif',serif;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:20px;}
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:48px;}
+.pain-card{background:white;border:1px solid var(--border);border-radius:20px;padding:28px;transition:all .3s;}
+.pain-card:hover{border-color:var(--green-mid);transform:translateY(-4px);}
+.pain-icon{font-size:32px;margin-bottom:16px;}
+.pain-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px;}
+.pain-text{font-size:14px;color:var(--ink-muted);line-height:1.6;}
 
-        /* Header Component */
-        .header {
-            grid-column: span 12;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(4, 120, 87, 0.2);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+/* HOW */
+.how-section{background:var(--ink);color:white;padding:100px 5%;position:relative;overflow:hidden;}
+.how-section::before{content:'';position:absolute;top:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.how-section .section-tag{color:var(--green-mid);}
+.how-section h2{color:white;}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:56px;position:relative;}
+.steps::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);}
+.step{text-align:center;padding:0 24px;}
+.step-num{width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--green-mid);background:rgba(29,158,117,.1);}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:white;margin-bottom:10px;}
+.step-text{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;}
+.step-arrow{position:absolute;top:20px;font-size:20px;color:rgba(255,255,255,.2);}
 
-        .header-titles h1 {
-            font-size: 2.2em;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* FEATURES */
+.features-section{padding:100px 5%;background:white;}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:56px;}
+.features-grid.reverse{direction:rtl;}
+.features-grid.reverse > *{direction:ltr;}
+.feature-visual{background:var(--off-white);border-radius:24px;padding:32px;border:1px solid var(--border);position:relative;overflow:hidden;}
+.feature-visual::after{content:'';position:absolute;bottom:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(29,158,117,.08),transparent 70%);}
+.feature-list{display:flex;flex-direction:column;gap:20px;}
+.feature-item{display:flex;gap:14px;align-items:flex-start;}
+.feature-check{width:24px;height:24px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.feature-check svg{width:12px;height:12px;}
+.feature-title{font-weight:500;font-size:15px;color:var(--ink);margin-bottom:4px;}
+.feature-desc{font-size:13px;color:var(--ink-muted);line-height:1.6;}
+.feature-big-title{font-family:'Instrument Serif',serif;font-size:clamp(28px,4vw,44px);line-height:1.15;color:var(--ink);margin-bottom:24px;letter-spacing:-.02em;}
+.feature-big-title em{color:var(--green);font-style:italic;}
 
-        .header-titles p {
-            color: var(--accent);
-            font-size: 1.1em;
-            font-weight: 500;
-        }
+/* MOCK ELEMENTS */
+.mock-phone{background:var(--ink);border-radius:28px;padding:4px;border:2px solid rgba(255,255,255,.1);max-width:200px;margin:0 auto;}
+.mock-screen{background:#0F2A1E;border-radius:22px;overflow:hidden;}
+.mock-bar{height:20px;background:rgba(255,255,255,.05);display:flex;align-items:center;padding:0 12px;gap:4px;}
+.mock-dot{width:5px;height:5px;border-radius:50%;}
+.mock-content{padding:14px;}
+.mock-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.mock-avatar{width:28px;height:28px;border-radius:8px;background:rgba(29,158,117,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.mock-lines{flex:1;}
+.mock-line{height:6px;border-radius:3px;background:rgba(255,255,255,.15);margin-bottom:4px;}
+.mock-line.short{width:60%;}
+.mock-badge{font-size:9px;padding:2px 7px;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;}
+.badge-g{background:rgba(29,158,117,.2);color:#5DCAA5;}
+.badge-r{background:rgba(226,75,74,.2);color:#F09595;}
+.badge-y{background:rgba(239,159,39,.2);color:#FAC775;}
 
-        .header-badge {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-weight: 600;
-            backdrop-filter: blur(5px);
-        }
+.ai-visual{text-align:center;padding:16px;}
+.ai-photo{width:100%;background:linear-gradient(135deg,#1a2e25,#0F2A1E);border-radius:16px;padding:20px;margin-bottom:12px;position:relative;}
+.ai-photo-inner{border:2px dashed rgba(29,158,117,.4);border-radius:10px;padding:24px;display:flex;flex-direction:column;align-items:center;}
+.ai-photo-icon{font-size:40px;margin-bottom:8px;}
+.ai-photo-text{font-size:11px;color:rgba(255,255,255,.5);}
+.ai-corner{position:absolute;width:16px;height:16px;border-color:var(--green);border-style:solid;}
+.ai-corner.tl{top:8px;left:8px;border-width:2px 0 0 2px;}
+.ai-corner.tr{top:8px;right:8px;border-width:2px 2px 0 0;}
+.ai-corner.bl{bottom:8px;left:8px;border-width:0 0 2px 2px;}
+.ai-corner.br{bottom:8px;right:8px;border-width:0 2px 2px 0;}
+.ai-result{background:white;border-radius:12px;padding:12px;text-align:left;}
+.ai-result-title{font-size:11px;color:var(--ink-muted);margin-bottom:8px;}
+.ai-field{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border);}
+.ai-field:last-child{border:none;}
+.ai-field-key{color:var(--ink-muted);}
+.ai-field-val{font-weight:500;color:var(--ink);}
+.ai-tag-small{font-size:9px;background:var(--green-light);color:var(--green-dark);padding:1px 5px;border-radius:3px;margin-left:4px;}
 
-        /* Top KPI Row */
-        .kpi-row {
-            grid-column: span 12;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+/* PRICING */
+.pricing-section{padding:100px 5%;background:var(--off-white);}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:48px;max-width:960px;margin-left:auto;margin-right:auto;}
+.plan{background:white;border:1.5px solid var(--border);border-radius:24px;padding:36px;transition:all .3s;}
+.plan.featured{border-color:var(--green);background:var(--ink);color:white;}
+.plan-tag{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px;}
+.plan.featured .plan-tag{color:var(--green-mid);}
+.plan-name{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--ink);margin-bottom:8px;}
+.plan.featured .plan-name{color:white;}
+.plan-price{font-family:'Instrument Serif',serif;font-size:52px;color:var(--ink);line-height:1;}
+.plan.featured .plan-price{color:white;}
+.plan-price span{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink-muted);}
+.plan.featured .plan-price span{color:rgba(255,255,255,.5);}
+.plan-desc{font-size:13px;color:var(--ink-muted);margin:12px 0 24px;line-height:1.6;}
+.plan.featured .plan-desc{color:rgba(255,255,255,.5);}
+.plan-items{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.plan-items li{font-size:13px;color:var(--ink-mid);display:flex;gap:8px;align-items:flex-start;}
+.plan.featured .plan-items li{color:rgba(255,255,255,.75);}
+.plan-items li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+.plan-btn{width:100%;padding:14px;border-radius:100px;font-size:14px;font-weight:500;text-align:center;border:1.5px solid var(--border);color:var(--ink);background:transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block;font-family:'DM Sans',sans-serif;}
+.plan-btn:hover{border-color:var(--green);color:var(--green);}
+.plan.featured .plan-btn{background:var(--green);border-color:var(--green);color:white;}
+.plan.featured .plan-btn:hover{background:var(--green-mid);}
+.popular-badge{display:inline-block;background:var(--green);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:12px;font-family:'Syne',sans-serif;}
 
-        .kpi-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 5px solid var(--secondary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+/* TESTIMONIALS */
+.testimonials{padding:100px 5%;background:white;}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:48px;}
+.testi{background:var(--off-white);border:1px solid var(--border);border-radius:20px;padding:28px;}
+.testi-text{font-family:'Instrument Serif',serif;font-size:18px;line-height:1.5;color:var(--ink);margin-bottom:20px;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.testi-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Syne',sans-serif;}
+.testi-name{font-weight:500;font-size:14px;color:var(--ink);}
+.testi-role{font-size:12px;color:var(--ink-muted);}
+.stars{color:var(--amber);font-size:13px;margin-bottom:12px;}
 
-        .kpi-card .kpi-title {
-            color: var(--text-muted);
-            font-size: 0.9em;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+/* CTA */
+.cta-section{padding:100px 5%;background:var(--green);position:relative;overflow:hidden;text-align:center;}
+.cta-section::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:1px solid rgba(255,255,255,.1);top:-200px;left:50%;transform:translateX(-50%);}
+.cta-section::after{content:'';position:absolute;width:900px;height:900px;border-radius:50%;border:1px solid rgba(255,255,255,.06);top:-350px;left:50%;transform:translateX(-50%);}
+.cta-section h2{font-family:'Instrument Serif',serif;font-size:clamp(36px,6vw,72px);color:white;margin-bottom:20px;}
+.cta-section p{font-size:18px;color:rgba(255,255,255,.75);margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;}
+.btn-white{background:white;color:var(--green);padding:18px 40px;border-radius:100px;font-size:16px;font-weight:500;text-decoration:none;transition:all .25s;display:inline-block;}
+.btn-white:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.2);}
+.cta-small{font-size:13px;color:rgba(255,255,255,.5);margin-top:16px;}
 
-        .kpi-card .kpi-value {
-            color: var(--primary-dark);
-            font-size: 2em;
-            font-weight: 800;
-        }
+/* FOOTER */
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:40px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+footer .logo{color:white;}
+footer p{font-size:13px;}
 
-        .kpi-card .kpi-desc {
-            font-size: 0.85em;
-            color: var(--secondary);
-            font-weight: 600;
-            margin-top: 5px;
-        }
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:none;}
 
-        /* Generic Card Style */
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            color: var(--primary-dark);
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Specific Span Layouts */
-        .col-span-8 { grid-column: span 8; }
-        .col-span-4 { grid-column: span 4; }
-        .col-span-6 { grid-column: span 6; }
-        .col-span-12 { grid-column: span 12; }
-
-        /* Highlight Boxes */
-        .insight-box {
-            background: var(--accent);
-            border-radius: 8px;
-            padding: 15px;
-            color: var(--primary-dark);
-            font-weight: 600;
-            font-size: 1.05em;
-            border-left: 4px solid var(--primary);
-            margin-top: auto;
-        }
-
-        .alert-box {
-            background: #fef2f2;
-            border-left: 4px solid #ef4444;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            color: #991b1b;
-        }
-
-        /* Lists */
-        ul {
-            list-style: none;
-        }
-
-        ul li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 10px;
-            color: var(--text-main);
-        }
-
-        ul li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--secondary);
-            font-weight: bold;
-        }
-
-        /* Architecture Section */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .tech-item {
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: 8px;
-            border-top: 3px solid var(--primary);
-        }
-
-        .tech-item h4 {
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-            font-size: 1em;
-        }
-
-        .tech-item p {
-            font-size: 0.85em;
-            color: var(--text-muted);
-        }
-
-        /* CTA Roadmap */
-        .roadmap-timeline {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .step {
-            flex: 1;
-            min-width: 200px;
-            background: var(--accent);
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid var(--secondary);
-        }
-
-        .step h4 {
-            color: var(--primary-dark);
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 1024px) {
-            .col-span-8, .col-span-4, .col-span-6 {
-                grid-column: span 12;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .header-titles h1 { font-size: 1.8em; }
-            .card { padding: 20px; }
-            .kpi-card { padding: 15px; }
-            .insight-box { font-size: 0.95em; }
-        }
-    </style>
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .features-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:24px;flex-wrap:wrap;}
+  .steps::before{display:none;}
+  .features-grid.reverse{direction:ltr;}
+}
+</style>
 </head>
 <body>
 
-    <div class="dashboard">
-        
-        <div class="header">
-            <div class="header-titles">
-                <h1>🚀 Libre IA</h1>
-                <p>Unidade Estratégica de Automação e Inteligência Artificial</p>
-            </div>
-            <div class="header-badge">
-                Status: Proposta Executiva
-            </div>
-        </div>
+<nav>
+  <div class="logo">NodStoK<span style="color:var(--green);"></span></div>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#funcionalidades">Funcionalidades</a></li>
+    <li><a href="#precos">Preços</a></li>
+  </ul>
+  <a href="#precos" class="nav-cta">Começar grátis</a>
+</nav>
 
-        <div class="kpi-row">
-            <div class="kpi-card">
-                <span class="kpi-title">Custo de Aquisição (CAC)</span>
-                <span class="kpi-value">R$ 0,00</span>
-                <span class="kpi-desc">Upsell na base atual de prefeituras</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-title">Mercado GovTech IA</span>
-                <span class="kpi-value">+42% a.a.</span>
-                <span class="kpi-desc">Crescimento projetado até 2028</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-title">Economia Operacional</span>
-                <span class="kpi-value">Até 60%</span>
-                <span class="kpi-desc">Para o cliente governamental</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-title">Piloto Interno</span>
-                <span class="kpi-value">90 Dias</span>
-                <span class="kpi-desc">Para gerar ROI e validar modelo</span>
-            </div>
-        </div>
-
-        <div class="card col-span-8">
-            <h2 class="card-title">👁️ Visão de Futuro e Posicionamento Estratégico</h2>
-            <p style="font-size: 1.1em; margin-bottom: 20px; color: var(--text-main);">
-                A inteligência artificial não é mais uma "tendência" distante, é a nova infraestrutura base. Entregar apenas o painel de software para o governo será insuficiente; precisamos entregar a <strong>força de trabalho digital</strong> que opera esse sistema.
-            </p>
-            
-            <div class="insight-box" style="margin-bottom: 20px;">
-                "O futuro é hoje e não podemos mais esperar. Precisamos estar à frente e ser pioneiros quando nossos concorrentes chegarem. Quem dominar a camada de automação nos governos hoje, ditará as regras da próxima década."
-            </div>
-
-            <h4 style="color: var(--primary-dark); margin-bottom: 10px;">Ganchos de Venda (Por que fecharão conosco?):</h4>
-            <ul>
-                <li><strong>Lock-in Tecnológico:</strong> Ao conectarmos a Libre IA aos nossos sistemas, criamos uma dependência positiva. O cliente não vai querer trocar um sistema que já trabalha sozinho.</li>
-                <li><strong>Automação Não-Invasiva:</strong> Não pedimos para o governo licitar ou trocar o banco de dados. Nossos agentes rodam nos bastidores, sem traumas operacionais.</li>
-                <li><strong>Aumento de MRR (Receita Recorrente):</strong> Deixamos de vender apenas manutenção para vender "capacidade de processamento". Cobramos pelo resultado, aumentando a margem de lucro.</li>
-            </ul>
-        </div>
-
-        <div class="card col-span-4">
-            <h2 class="card-title">🎯 O Oceano Azul GovTech</h2>
-            
-            <div class="alert-box">
-                <strong>A Dor Real:</strong><br>
-                Servidores sobrecarregados, processos travados e limite orçamentário para novas contratações públicas.
-            </div>
-
-            <p style="margin-bottom: 15px; font-weight: 600;">Por que não temos concorrentes diretos ainda?</p>
-            <ul>
-                <li>Startups ágeis (AAA) não possuem certificações, histórico de licitações ou compliance LGPD público.</li>
-                <li>Empresas tradicionais de GovTech são lentas e focadas em software legado, não em Agentes Autônomos.</li>
-            </ul>
-
-            <div class="insight-box" style="background: var(--bg-color); border-left-color: var(--primary-dark); font-size: 0.9em;">
-                <strong>Nosso Diferencial:</strong> A Libre já tem a confiança, os contratos e a <em>Esteira de Qualidade (QA)</em> para garantir que a IA não sofra "alucinações" com dados públicos.
-            </div>
-        </div>
-
-        <div class="card col-span-6">
-            <h2 class="card-title">🏆 Nossos Ativos (Cases Internos)</h2>
-            <p style="margin-bottom: 15px;">Já começamos a provar a tecnologia dentro de casa. Precisamos apenas de governança para escalar.</p>
-            
-            <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h4 style="color: var(--primary-dark);">🤖 Libretto (Agente de Automação)</h4>
-                <p style="font-size: 0.9em; margin-top: 5px;"><strong>Status: 100% Funcional.</strong> Lê código, monitora GitLab e automatiza o report da equipe técnica. Reduziu drasticamente falhas de comunicação e horas manuais do time de QA/Dev.</p>
-            </div>
-
-            <div style="background: var(--bg-color); padding: 15px; border-radius: 8px;">
-                <h4 style="color: var(--primary-dark);">👩‍💼 MarIA (Assistente Virtual)</h4>
-                <p style="font-size: 0.9em; margin-top: 5px;"><strong>Status: Operando (+5.000 int/mês).</strong> Atende o cidadão diretamente. Com a criação da Libre IA, será refatorada para ser não apenas reativa, mas resolutiva.</p>
-            </div>
-        </div>
-
-        <div class="card col-span-6">
-            <h2 class="card-title">⚙️ Motor Tecnológico (Seguro & Auditável)</h2>
-            <p style="margin-bottom: 15px;">Foco em dados reais, governança e ferramentas open-source consolidadas para evitar custos altos de servidores externos.</p>
-            
-            <div class="tech-grid">
-                <div class="tech-item">
-                    <h4>Orquestração</h4>
-                    <p><strong>n8n Self-Hosted:</strong> Garante que os fluxos de dados fiquem 100% dentro dos servidores da empresa (Soberania de Dados).</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Contexto Restrito</h4>
-                    <p>Conexão via API direta com Bancos Relacionais (MySQL/SQL). A IA não inventa, ela lê os fatos.</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Qualidade (QA)</h4>
-                    <p>Automações via Cypress/Selenium para testar as saídas da IA continuamente. O diferencial competitivo de compliance.</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Cérebro (LLM)</h4>
-                    <p>APIs Enterprise (zero-retenção) ou modelos Llama locais, orquestrados em Python/JS.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card col-span-12" style="border-top: 5px solid var(--primary);">
-            <h2 class="card-title" style="border: none;">🛣️ Próximos Passos e Solicitacão de Aprovação</h2>
-            <p>Proposta para um Piloto Interno focado em resultados rápidos e risco baixo, antes da primeira venda externa.</p>
-            
-            <div class="roadmap-timeline">
-                <div class="step">
-                    <h4>Mês 1</h4>
-                    <p style="font-size: 0.9em; color: var(--text-muted);">Aprovação da diretoria, definição de stack e desenho do primeiro fluxo Libretto 2.0.</p>
-                </div>
-                <div class="step">
-                    <h4>Mês 2</h4>
-                    <p style="font-size: 0.9em; color: var(--text-muted);">Implementação no nosso ecossistema interno. Conexão do n8n aos bancos de dados internos.</p>
-                </div>
-                <div class="step">
-                    <h4>Mês 3</h4>
-                    <p style="font-size: 0.9em; color: var(--text-muted);">Extração de métricas (Economia de horas/Custo). Montagem do "Pacote de Venda" B2G.</p>
-                </div>
-            </div>
-        </div>
-
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-circle hero-c1"></div>
+    <div class="hero-circle hero-c2"></div>
+  </div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-tag">Inteligência artificial para pequenas empresas</div>
+    <h1>Cadastre qualquer produto<br>em <em>menos de 10 segundos.</em></h1>
+    <p class="hero-sub">Tire uma foto. A IA identifica, categoriza e cadastra. Controle de estoque, alertas de ruptura e emissão de NF-e — tudo em um app simples.</p>
+    <div class="hero-btns">
+      <a href="#precos" class="btn-primary">Testar grátis por 14 dias →</a>
+      <a href="#como-funciona" class="btn-secondary">Ver como funciona</a>
     </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">10s</div>
+        <div class="stat-label">para cadastrar um produto</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">94%</div>
+        <div class="stat-label">de precisão da IA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">digitação necessária</div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- PROBLEM -->
+<section class="section" id="problema">
+  <div class="reveal">
+    <div class="section-tag">O problema</div>
+    <h2>Seu estoque está<br>te custando dinheiro.</h2>
+    <p style="font-size:17px;color:var(--ink-muted);max-width:580px;line-height:1.7;">Cadastro manual é lento e cheio de erro. Produto acaba sem avisar. NF-e por fora do sistema. Relatório no Excel que ninguém atualiza.</p>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card reveal">
+      <div class="pain-icon">⏳</div>
+      <div class="pain-title">Cadastro que leva horas</div>
+      <div class="pain-text">Digitar nome, código, categoria, NCM, unidade… para cada produto. Qualquer erro e o estoque fica errado para sempre.</div>
+    </div>
+    <div class="pain-card reveal">
+      <div class="pain-icon">📉</div>
+      <div class="pain-title">Ruptura de estoque</div>
+      <div class="pain-text">O produto acabou e você só descobriu quando o cliente perguntou. Venda perdida, cliente insatisfeito, compra de emergência cara.</div>
+    </div>
+    <div class="pain-card reveal">
+      <div class="pain-icon">📋</div>
+      <div class="pain-title">NF-e fora do sistema</div>
+      <div class="pain-text">Emitir nota fiscal em outro site, depois dar entrada manual no estoque. Dados duplicados, tempo perdido e chance alta de erro.</div>
+    </div>
+    <div class="pain-card reveal">
+      <div class="pain-icon">🗑</div>
+      <div class="pain-title">Mercadoria vencendo</div>
+      <div class="pain-text">Produtos vencendo na gôndola sem que ninguém saiba. Prejuízo no bolso e risco de multa da vigilância sanitária.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="como-funciona">
+  <div class="reveal">
+    <div class="section-tag">Como funciona</div>
+    <h2>Simples como tirar uma foto.</h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <div class="step-title">Tire a foto</div>
+      <div class="step-text">Aponte a câmera para o produto, embalagem, etiqueta ou NF-e em PDF. A IA cuida do resto.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <div class="step-title">IA analisa</div>
+      <div class="step-text">Em segundos, nome, código de barras, categoria, NCM e unidade são identificados automaticamente.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <div class="step-title">Confirme e ajuste</div>
+      <div class="step-text">Revise os dados pré-preenchidos, ajuste o que precisar e informe a quantidade e o preço de custo.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">4</div>
+      <div class="step-title">Pronto!</div>
+      <div class="step-text">Produto no estoque, etiqueta gerada e sistema atualizado. Do zero ao cadastrado em menos de 10 segundos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 1 -->
+<section class="features-section" id="funcionalidades">
+  <div class="reveal" style="max-width:600px;">
+    <div class="section-tag">Funcionalidades</div>
+    <h2>Tudo que você precisa,<br>nada que você não usa.</h2>
+  </div>
+  <div class="features-grid reveal">
+    <div>
+      <div class="feature-big-title">Cadastro por foto<br>com <em>IA nativa</em></div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Reconhecimento de produto</div><div class="feature-desc">Identifica nome, marca, gramatura e variante pela foto da embalagem.</div></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Código de barras automático</div><div class="feature-desc">Lê EAN-13, Code 128 e QR Code sem precisar de scanner separado.</div></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Sugestão de NCM e categoria</div><div class="feature-desc">Nunca mais perca tempo pesquisando código fiscal. A IA sugere e você confirma.</div></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Leitura de NF-e por foto</div><div class="feature-desc">Fotografe a nota do fornecedor e todos os produtos são cadastrados de uma vez.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="ai-photo">
+        <div class="ai-corner tl"></div><div class="ai-corner tr"></div>
+        <div class="ai-corner bl"></div><div class="ai-corner br"></div>
+        <div class="ai-photo-inner">
+          <div class="ai-photo-icon">📦</div>
+          <div class="ai-photo-text">Produto identificado com 94% de confiança</div>
+        </div>
+      </div>
+      <div class="ai-result">
+        <div class="ai-result-title" style="color:var(--ink-muted);font-size:11px;">Dados extraídos pela IA</div>
+        <div class="ai-field"><span class="ai-field-key">Nome</span><span class="ai-field-val">Biscoito Maizena 200g <span class="ai-tag-small">IA</span></span></div>
+        <div class="ai-field"><span class="ai-field-key">Código</span><span class="ai-field-val">7896213002</span></div>
+        <div class="ai-field"><span class="ai-field-key">Categoria</span><span class="ai-field-val">Mercearia <span class="ai-tag-small">IA</span></span></div>
+        <div class="ai-field"><span class="ai-field-key">NCM</span><span class="ai-field-val">1905.31 <span class="ai-tag-small">IA</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-grid reverse reveal" style="margin-top:80px;">
+    <div>
+      <div class="feature-big-title">Alertas <em>inteligentes</em><br>antes que falte</div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Alerta de estoque mínimo</div><div class="feature-desc">Receba notificação no app e no WhatsApp quando o produto estiver chegando no limite.</div></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Controle de validade</div><div class="feature-desc">Saiba 30 dias antes quais produtos vão vencer. Evite perdas e multas da vigilância.</div></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div><div class="feature-title">Previsão de ruptura</div><div class="feature-desc">Com base no histórico de vendas, a IA prevê quando o produto vai acabar e sugere a quantidade ideal de compra.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-visual" style="background:var(--ink);padding:24px;">
+      <div class="mock-content">
+        <div style="font-family:'Syne',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;font-weight:600;letter-spacing:.06em;">ALERTAS DE HOJE</div>
+        <div class="mock-row">
+          <div class="mock-avatar" style="background:rgba(226,75,74,.2);">🔴</div>
+          <div class="mock-lines">
+            <div style="font-size:12px;color:white;margin-bottom:3px;">Arroz Tio João 5kg</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);">Restam 3 un. · mín: 20</div>
+          </div>
+          <span class="mock-badge badge-r">Crítico</span>
+        </div>
+        <div class="mock-row">
+          <div class="mock-avatar" style="background:rgba(239,159,39,.2);">🟡</div>
+          <div class="mock-lines">
+            <div style="font-size:12px;color:white;margin-bottom:3px;">Leite Integral Piracanjuba</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);">Vence em 8 dias · 42 un.</div>
+          </div>
+          <span class="mock-badge badge-y">Validade</span>
+        </div>
+        <div class="mock-row">
+          <div class="mock-avatar" style="background:rgba(29,158,117,.2);">📦</div>
+          <div class="mock-lines">
+            <div style="font-size:12px;color:white;margin-bottom:3px;">Óleo de Soja Liza 900ml</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);">IA: pedir 48 un. em 5 dias</div>
+          </div>
+          <span class="mock-badge badge-g">Previsão</span>
+        </div>
+        <div style="margin-top:16px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);border-radius:10px;padding:12px;">
+          <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px;">Sugestão da IA</div>
+          <div style="font-size:13px;color:white;">Gerar pedido de compra para 3 fornecedores →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="precos">
+  <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto 0;">
+    <div class="section-tag">Preços</div>
+    <h2>Simples e sem surpresa.</h2>
+    <p style="font-size:16px;color:var(--ink-muted);">14 dias grátis, sem cartão de crédito. Cancele quando quiser.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="plan reveal">
+      <div class="plan-tag">Iniciante</div>
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">R$ 89<span>/mês</span></div>
+      <div class="plan-desc">Para quem está começando a organizar o estoque.</div>
+      <ul class="plan-items">
+        <li>Até 500 produtos</li>
+        <li>Cadastro por foto com IA</li>
+        <li>Alertas de estoque mínimo</li>
+        <li>Controle de validade</li>
+        <li>App mobile (iOS e Android)</li>
+        <li>Suporte por e-mail</li>
+      </ul>
+      <a href="#" class="plan-btn">Começar grátis</a>
+    </div>
+    <div class="plan featured reveal">
+      <div class="popular-badge">Mais popular</div>
+      <div class="plan-tag">Para crescer</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">R$ 189<span>/mês</span></div>
+      <div class="plan-desc">Para quem quer controle total com NF-e e relatórios.</div>
+      <ul class="plan-items">
+        <li>Produtos ilimitados</li>
+        <li>Tudo do Starter</li>
+        <li>Emissão de NF-e integrada</li>
+        <li>Leitura de NF-e do fornecedor por foto</li>
+        <li>Previsão de ruptura com IA</li>
+        <li>Relatórios avançados</li>
+        <li>Impressão de etiquetas térmicas</li>
+        <li>Suporte via WhatsApp</li>
+      </ul>
+      <a href="#" class="plan-btn">Começar grátis</a>
+    </div>
+    <div class="plan reveal">
+      <div class="plan-tag">Empresas</div>
+      <div class="plan-name">Business</div>
+      <div class="plan-price">R$ 349<span>/mês</span></div>
+      <div class="plan-desc">Para distribuidoras e empresas com múltiplos usuários.</div>
+      <ul class="plan-items">
+        <li>Tudo do Pro</li>
+        <li>Múltiplos depósitos</li>
+        <li>Até 5 usuários simultâneos</li>
+        <li>Integração com marketplaces</li>
+        <li>API para integração customizada</li>
+        <li>Onboarding dedicado</li>
+        <li>Gerente de conta exclusivo</li>
+      </ul>
+      <a href="#" class="plan-btn">Falar com especialista</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="reveal" style="text-align:center;">
+    <div class="section-tag">Depoimentos</div>
+    <h2>Quem usa, não volta<br>para a planilha.</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"Eu gastava 2 horas por semana só atualizando o estoque no Excel. Hoje levo 15 minutos. O cadastro por foto é mágica."</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#E1F5EE;color:#0F6E56;">RO</div>
+        <div><div class="testi-name">Roberto Oliveira</div><div class="testi-role">Mercadinho Oliveira, Campinas</div></div>
+      </div>
+    </div>
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"A IA acertou o NCM dos meus produtos que eu nunca sabia. Isso sozinho já pagou o plano — evitei uma multa no próximo mês."</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#FAEEDA;color:#854F0B;">CS</div>
+        <div><div class="testi-name">Carla Santos</div><div class="testi-role">Distribuidora Santos, BH</div></div>
+      </div>
+    </div>
+    <div class="testi reveal">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"Meu estoque de pet shop tem mais de 800 itens. Registrei tudo em um fim de semana. Antes levaria meses para fazer isso no sistema antigo."</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#FAECE7;color:#993C1D;">MF</div>
+        <div><div class="testi-name">Marcos Ferreira</div><div class="testi-role">PetMundo, São Paulo</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div style="position:relative;z-index:1;">
+    <h2>Comece hoje.<br>É grátis por 14 dias.</h2>
+    <p>Sem cartão de crédito. Sem contrato. Cancele quando quiser.</p>
+    <a href="#" class="btn-white">Criar minha conta grátis →</a>
+    <div class="cta-small">Já usado por +500 pequenos negócios no Brasil</div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">NodStoK<span style="color:var(--green);"></span></div>
+  <p>© 2025 NodStoK. Todos os direitos reservados.</p>
+  <p>contato@nodstok.com.br</p>
+</footer>
+
+<script>
+const reveals=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:.12});
+reveals.forEach(r=>obs.observe(r));
+</script>
 </body>
 </html>
